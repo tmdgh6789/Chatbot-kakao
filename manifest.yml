@@ -1,0 +1,19 @@
+---
+declared-services:
+  my-conversation-service:
+    label: conversation
+    plan: free
+  camomile-cloudantNoSQLDB:
+    label: cloudantNoSQLDB
+    plan: Lite
+applications:
+- name: baobab-kakao-chatbot
+  command: npm start
+  path: .
+  memory: 256M
+  instances: 1
+  services:
+  - conversation-hguaz-conversati-1517796312979
+  - Cloudant NoSQL DB-z9
+  env:
+    NPM_CONFIG_PRODUCTION: false
