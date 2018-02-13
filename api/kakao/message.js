@@ -613,41 +613,6 @@ let postMessage = (req, res) => {
       });
     });
   };
-  // 필명 비밀번호 입력 했을 때
-  // function memCheck(id, pw, robot, userKey)
-  // {
-  //   try
-  //   {
-  //     let query = "UPDATE tbl_plus_free SET id = '" + id + "', pw = '" + pw + "', robot = '" + robot + "' WHERE user_key = '" + userKey + "';";
-      
-  //     new mssql.ConnectionPool(config_kakao).connect().then(pool => {
-  //       return pool.request().query(query);
-  //     }).then(result => {
-  //       let massage = {
-  //         "message": {
-  //           "text": "인공지능 R-e로 교체 완료."
-  //         }
-  //       };
-  //       sendKakaoText(massage);
-        
-  //       mssql.close();
-  //     }).catch(err => {
-  //       console.error(err.message);
-  //       let massage = {
-  //         "message": {
-  //           "text": "오류코드 : " + err.name + "\n오류내용 : " + err.message
-  //         }
-  //       };
-  //       sendKakaoText(massage);
-        
-  //       mssql.close();
-  //     });
-  //   }
-  //   catch(err)
-  //   {
-  //     console.error(err.message);
-  //   }
-  // }
 };
 
 module.exports = {
