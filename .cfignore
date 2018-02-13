@@ -4,3 +4,5 @@ coverage
 npm-debug.log
 readme_images
 test
+config1.js
+config2.js
