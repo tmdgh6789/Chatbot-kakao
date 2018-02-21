@@ -202,6 +202,85 @@ let serchReportList = content => {
   });
 };
 
+let selectDig = () => {
+  return new Promise((resolve, reject) => {
+    let query = "SELECT * FROM tbl_dig;";
+    
+    new mssql.ConnectionPool(config_bong).connect().then(pool => {
+      return pool.request().query(query);
+    }).then(result => {
+      mssql.close();
+      resolve(result);
+    }).catch(err => {
+      console.error(err);
+      
+      mssql.close();
+    });
+  });
+};
+
+let selectFuday = () => {
+  return new Promise((resolve, reject) => {
+    let query = "SELECT * FROM tbl_fuday;";
+    
+    new mssql.ConnectionPool(config_bong).connect().then(pool => {
+      return pool.request().query(query);
+    }).then(result => {
+      mssql.close();
+      resolve(result);
+    }).catch(err => {
+      console.error(err);
+      
+      mssql.close();
+    });
+  });
+};
+
+// 코스피 점수
+function briefingMarketConditions (robot, quotient) {
+  console.log(robot + quotient);
+  let answer;
+  if (robot == "000")
+  {
+    if (quotient >= 60)
+    {
+      answer = "괜찮은 것 같아요!";
+    }
+    else if (quotient < 60 && quotient >= 40)
+    {
+      answer = "평범하네요~";
+    }
+    else if (quotient < 40)
+    {
+      answer = "안좋은 것 같아요...";
+    }
+  }
+  else if (robot == "100")
+  {
+    if (quotient >= 70)
+    {
+      answer = Math.round(quotient) + "점으로 아주 괜찮은 점수에요!";
+    }
+    else if (quotient < 70 && quotient >= 60)
+    {
+      answer = Math.round(quotient) + "점으로 괜찮은 점수같아요!";
+    }
+    else if (quotient < 60 && quotient >= 40)
+    {
+      answer = Math.round(quotient) + "점으로 평범한 점수에요~";
+    }
+    else if (quotient < 40 && quotient >= 30)
+    {
+      answer = Math.round(quotient) + "점으로 안좋은 점수에요..";
+    }
+    else if (quotient < 30)
+    {
+      answer = Math.round(quotient) + "점으로 아주 안좋아요...";
+    }
+  }
+  return answer;
+}
+
 let postMessage = (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
@@ -333,6 +412,13 @@ let postMessage = (req, res) => {
       let massage = {
         "message": {
           "text": "기존에 R-e를 사용하시던 분들은 '기존 VIP 인증하기'를 입력 후 등록해주세요. "
+        },
+        "keyboard": {
+          "type": "buttons",
+          "buttons": [
+            "기존 VIP 인증하기",
+            "홈"
+          ]
         }
       };
       sendKakaoText(massage);
@@ -414,6 +500,7 @@ let postMessage = (req, res) => {
   // 그 외 모든 말은 watson 으로 전송
   else
   {
+    // 사용자의 말이 종목명일 때
     serchStock(content).then(allCode => {
       if (content.text == allCode['종목명'])
       {
@@ -485,44 +572,58 @@ let postMessage = (req, res) => {
           console.log(err);
         });
       }
+      // 그 외 일 때 watson
       else
       {
-        //user_key를 사용하여 db에 저장된 context가 있는지 확인합니다.
-        db.get(userKey).then(doc => {
-          //저장된 context가 있는 경우 이를 사용하여 conversation api를 호출합니다.
-          conversation.getConversationResponse(content, doc.context).then(data => {
-            // context를 업데이트 합니다.
-            db.insert(Object.assign(doc, {
-              'context': Object.assign(data.context, {
-                'timezone' : "Asia/Seoul"
-              }),
-            }));
-            stockResponse(data);
+        // 사용자가 한 말 중 종목명이 포함되어 있을 때 종목명을 "종목명"으로 바꾸기 위함
+        let str = {
+          'text' : content.text
+        };
+        serchStock(content).then(allCode => {
+          if (!allCode) { }
+          // 종목명이 있을 경우 종목명을 "종목명"으로 바꿈
+          else
+          {
+            str.text = str.text.replace(allCode['종목명'], "종목명");
+          }
+        }).then(result => {
+          //user_key를 사용하여 db에 저장된 context가 있는지 확인합니다.
+          db.get(userKey).then(doc => {
+            //저장된 context가 있는 경우 이를 사용하여 conversation api를 호출합니다.
+            conversation.getConversationResponse(str, doc.context).then(data => {
+              // context를 업데이트 합니다.
+              db.insert(Object.assign(doc, {
+                'context': Object.assign(data.context, {
+                  'timezone' : "Asia/Seoul"
+                }),
+              }));
+              watsonResponse(data);
+            }).catch(err => {
+              console.error(err.message);
+              return res.json({
+                  "message" : {
+                    "text" : JSON.stringify(err.message)
+                  }
+              });
+            });
           }).catch(err => {
-            console.error(err.message);
-            return res.json({
-                "message" : {
-                  "text" : JSON.stringify(err.message)
-                }
-            });
-          });
-        }).catch(err => {
-          console.error(err);
-          // 처음 대화인 경우 context가 없습니다. 이러한 경우 context 없이 conversation api를 호출합니다.
-          conversation.getConversationResponse(content, {}).then(data => {
-            // context를 저장합니다.
-            db.insert({
-              '_id' : userKey,
-              'user_key' : userKey,
-              'context': data.context,
-              'type' : 'kakao'
-            });
-            stockResponse(data);
-          }).catch(function(err){
-            return res.json({
-                "message" : {
-                  "text" : JSON.stringify(err.message)
-                }
+            console.error(err);
+            // 처음 대화인 경우 context가 없습니다. 이러한 경우 context 없이 conversation api를 호출합니다.
+            conversation.getConversationResponse(str, {}).then(data => {
+              // context를 저장합니다.
+              db.insert({
+                '_id' : userKey,
+                'user_key' : userKey,
+                'context': data.context,
+                'type' : 'kakao'
+              });
+              watsonResponse(data);
+            }).catch(function(err){
+              return res.json({
+                  "message" : {
+                    "text" : JSON.stringify(err.message)
+                  }
+              });
             });
           });
         });
@@ -552,10 +653,12 @@ let postMessage = (req, res) => {
   }
 
   // watson으로 보내기
-  function stockResponse(data) {
-    if (getOutputText(data) == "종목묻기")
-    {
-      serchStock(content).then(allCode => {
+  function watsonResponse(data) {
+    serchStock(content).then(allCode => {
+      // watson 대답이 종목묻기이거나 사용자의 말이 '종목명?' 일 때 (의도 : 종목 어떤지 묻기)
+      if (getOutputText(data) == "종목묻기" || content.text == allCode['종목명'] + "?")
+      {
+        // 종목명 검색 후 종목명이 없을 때
         if(!allCode)
         {
           return res.json({
@@ -564,6 +667,7 @@ let postMessage = (req, res) => {
             }
           });
         }
+        // 종목명이 있을 때
         else
         {
           let answer;
@@ -580,6 +684,7 @@ let postMessage = (req, res) => {
               let forLLine = parseInt(allCodeWhereCode.recordset[0]['LLine'], 10).toLocaleString(undefined) + "원";
               
               whatRobot(userKey).then(robot => {
+                // 사용자의 로봇이 무료봇일때
                 if (robot == "000")
                 {
                   if (allCodeWhereCode.recordset[0]['HLine'] <= allCodeWhereCode.recordset[0]['현재가'])
@@ -602,6 +707,7 @@ let postMessage = (req, res) => {
                     answer = "부미 :\n너무 떨어지는데요.. 유료 인공지능 선배님들은 이럴 때 어떻게 해야 하는지 알고계시던데...";
                   }
                 }
+                // 사용자의 로봇이 유료봇일때
                 else if (robot == "100")
                 {
                   if (allCodeWhereCode.recordset[0]['현재가'] < fuHead)
@@ -632,6 +738,7 @@ let postMessage = (req, res) => {
                     answer = "R-e :\n저점이 이렇게 뚫리면... 어디까지 떨어질지.. 바닥이 없을 수도 있어요.. 가뜩이나 종목도 안좋은데.. 결단을 내리셔야 겠네요";
                   }
                 }
+                // 사용자가 로봇을 선택하지 않았을때
                 else
                 {
                   answer = "담당 인공지능이 없어요! [ 홈 ] 을 쳐보세요!";
@@ -650,18 +757,82 @@ let postMessage = (req, res) => {
             console.log(err);
           });
         }
-      }).catch(err => {
-        console.log(err);
-      });
-    }
-    else
-    {
-      return res.json({
-        "message" : {
-          "text" : getOutputText(data)
-        }
-      });
-    }
+      }
+      // watson 대답이 매도의도 일 때 (의도 : 매도)
+      else if (getOutputText(data) == "매도의도")
+      {
+        return res.json({
+          "message" : {
+            "text" : "준비중인 서비스입니다."
+          }
+        });
+      }
+      // watson 대답이 매수의도 일 때 (의도 : 매수)
+      else if (getOutputText(data) == "매수의도")
+      {
+        return res.json({
+          "message" : {
+            "text" : "준비중인 서비스입니다."
+          }
+        });
+      }
+      // watson 대답이 시황묻기 일 때 (의도 : 코스피, 코스닥, 선물지수, 대형주, 중형주, 소형주, 시황 묻기)
+      else if (getOutputText(data) == "시황묻기")
+      {
+        let zzou, zzod; // 코스피 상승종목수, 하락종목수
+        let ozou, ozod; // 코스닥 상승종목수, 하락종목수
+        let zzlu, zzld; // 대형주 상승종목수, 하락종목수
+        let zzmu, zzmd; // 중형주 상승종목수, 하락종목수
+        let zzsu, zzsd; // 소형주 상승종목수, 하락종목수
+        
+        let kospi, kosdaq, large, medium, small, futuresIndex; // 코스피, 코스닥, 대형주, 중형주, 소형주, 선물지수 종가
+        let kospiAnswer, kosdaqAnswer, largeAnswer, mediumAnswer, smallAnswer;
+
+        selectDig().then(dig => {
+          zzou = parseInt(dig.recordset[0]['zzou']); zzod = parseInt(dig.recordset[0]['zzod']);
+          ozou = parseInt(dig.recordset[0]['ozou']); ozod = parseInt(dig.recordset[0]['ozod']);
+          zzlu = parseInt(dig.recordset[0]['zztu']); zzld = parseInt(dig.recordset[0]['zztd']);
+          zzmu = parseInt(dig.recordset[0]['zz3u']); zzmd = parseInt(dig.recordset[0]['zz3d']);
+          zzsu = parseInt(dig.recordset[0]['zzfu']); zzsd = parseInt(dig.recordset[0]['zzfd']);
+
+          // 백분율 계산 (1이 붙은 이유는 상승종목수, 하락종목수가 모두 0 이면 안되기 때문에 크게 의미 없을 1이 붙음)
+          kospi = (zzou * 100) / (zzou + zzod + 1);
+          kosdaq = (ozou * 100) / (ozou + ozod + 1);
+          large = (zzlu * 100) / (zzlu + zzld + 1);
+          medium = (zzmu * 100) / (zzmu + zzmd + 1);
+          small = (zzsu * 100) / (zzsu + zzsd + 1);
+
+          whatRobot(userKey).then(robot => {
+            // 로봇에 따라 달라야 하기 때문에 whatRobot으로 robot정보 가져옴
+            console.log(kospi);
+            kospiAnswer = briefingMarketConditions(robot, kospi);
+            kosdaqAnswer = briefingMarketConditions(robot, kosdaq);
+            largeAnswer = briefingMarketConditions(robot, large);
+            mediumAnswer = briefingMarketConditions(robot, medium);
+            smallAnswer = briefingMarketConditions(robot, small);
+          }).then(selectFuday().then(fuday => {
+            futuresIndex = fuday.recordset[0]['종가'];
+  
+            return res.json({
+              "message" : {
+                "text" : "R-e :\n코스피는 " + kospiAnswer + "\n코스닥은 " + kosdaqAnswer + "\n대형주는 " + largeAnswer + "\n중형주는 " + mediumAnswer + "\n소형주는 " + smallAnswer + "\n선물지수는 " + futuresIndex + " 포인트 입니다."
+              }
+            });
+          }));
+        });
+      }
+      // 그 외는 watson 대답 출력
+      else
+      {
+        return res.json({
+          "message" : {
+            "text" : getOutputText(data) + "\n\n다른 정보가 궁금하시면 [ 홈 ]을 입력해주세요!"
+          }
+        });
+      }
+    }).catch(err => {
+      console.log(err);
+    });
   }
 };
 
