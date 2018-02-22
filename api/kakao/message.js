@@ -99,7 +99,7 @@ let whatRobot = userKey => {
 // tbl_allCode 코드로 조회
 let selectAllCode = code => {
   return new Promise((resolve, reject) => {
-    let query = "SELECT * FROM tbl_allCode WHERE 코드 = '" + code + "'";
+    let query = "SELECT * FROM tbl_allCode WHERE 코드 = '" + code + "' ORDER BY 종목명 DESC";
     
     new mssql.ConnectionPool(config_login).connect().then(pool => {
       return pool.request().query(query);
@@ -117,7 +117,7 @@ let selectAllCode = code => {
 // tbl_allCode 모두 조회
 let serchStock = content => {
   return new Promise((resolve, reject) => {
-    let query = "SELECT * FROM tbl_allCode";
+    let query = "SELECT * FROM tbl_allCode ORDER BY 종목명 DESC";
   
     new mssql.ConnectionPool(config_login).connect().then(pool => {
       return pool.request().query(query);
@@ -238,7 +238,6 @@ let selectFuday = () => {
 
 // 코스피 점수
 function briefingMarketConditions (robot, quotient) {
-  console.log(robot + quotient);
   let answer;
   if (robot == "000")
   {
@@ -297,7 +296,60 @@ let postMessage = (req, res) => {
   {
     let massage = {
       "message": {
-        "text": "종목명을 정확히 치면 종목 정보가, 종목명에 질문 (ex: 종목이 어떠냐고 물어보기, 물음표붙이기)을 하면 종목에 대한 의견을 들을 수 있습니다.\n[ 홈 ] 을 입력하시면 홈으로 이동합니다."
+        "text": "[상담원으로 전환하기] 버튼을 누르고 [ 종목수신동의 ] 라고 치시면 실시간으로 종목알림을 받으실 수 있습니다 (이후 다시 챗봇으로 전환하기 버튼을 눌러주세요.)\n[ 홈 ]이라고 치시면 절차에 따라 인공지능을 설치 하실 수 있습니다."
+      },
+      "keyboard": {
+        "type": "buttons",
+        "buttons": [
+          "종목 정보 묻기",
+          "종목 상황 묻기",
+          "관심 종목 묻기"
+        ]
+      }
+    };
+    sendKakaoText(massage);
+  }
+  else if (content.text == "종목 정보 묻기") 
+  {
+    let massage = {
+      "message": {
+        "text": "종목명만을 정확히 치면 종목 정보를 알려드립니다."
+      },
+      "keyboard": {
+        "type": "buttons",
+        "buttons": [
+          "홈"
+        ]
+      }
+    };
+    sendKakaoText(massage);
+  }
+  else if (content.text == "종목 상황 묻기")
+  {
+    let massage = {
+      "message": {
+        "text": "종목명에 질문을 하면 종목에 대한 의견을 알려드립니다.\nex) 종목명? 또는 종목명 어때? 등"
+      },
+      "keyboard": {
+        "type": "buttons",
+        "buttons": [
+          "홈"
+        ]
+      }
+    };
+    sendKakaoText(massage);
+  }
+  else if (content.text == "관심 종목 묻기")
+  {
+    let massage = {
+      "message": {
+        "text": "[ 종목 ] 이라고 치시면 관심 종목을 볼 수 있습니다."
+      },
+      "keyboard": {
+        "type": "buttons",
+        "buttons": [
+          "홈"
+        ]
       }
     };
     sendKakaoText(massage);
@@ -590,7 +642,7 @@ let postMessage = (req, res) => {
           //user_key를 사용하여 db에 저장된 context가 있는지 확인합니다.
           db.get(userKey).then(doc => {
             //저장된 context가 있는 경우 이를 사용하여 conversation api를 호출합니다.
-            conversation.getConversationResponse(str, doc.context).then(data => {
+            conversation.getConversationResponse(content, doc.context).then(data => {
               // context를 업데이트 합니다.
               db.insert(Object.assign(doc, {
                 'context': Object.assign(data.context, {
@@ -758,6 +810,98 @@ let postMessage = (req, res) => {
           });
         }
       }
+      else if (getOutputText(data) == "분석요청")
+      {
+        // 기능 구현하기
+        {
+          // //황금추세선 상선하단/[수익중] 매수가보다 현재가가 높을 때
+          // let upDownProfits = [];
+          // upDownProfits.push("다행히 현재 수익 중 이십니다. 추세선 상단의 목표 구간까지 보유가 가능해 보입니다.");
+          // upDownProfits.push("최근 해당 종목의 움직임에 매물대까지 고려하신다면 비중을 좀 줄이시는 전략이 좋아 보입니다.");
+          // upDownProfits.push("수익축하합니다. 일단 오늘 종가까지 지켜보시고 익절 기준에 이탈 없으면 추세선 기준까지 보유하시기 바랍니다.");
+          // upDownProfits.push("나쁘지 않습니다. 단기적인 수급이 더 들어오길 기다려 보시기 바랍니다.");
+          // upDownProfits.push("단기적인 관점이라면 현재 위치에서는 보유물량을 좀 줄이시는 전략으로 판단합니다.");
+          // upDownProfits.push("시장의 흐름과 같이 본다면 현재 비중을 무겁게 가져가시는 전략보다는 가볍게 들고 가시길 권유합니다.");
+          // upDownProfits.push("수익중이시네요 축하합니다. 매도 포인트를 잘 포착하시기 바랍니다.");
+          // upDownProfits.push("매수가보다 현재가가 높군요. 매도타이밍 잘 잡으시고 큰 수익 내시면 좋겠습니다.");
+          // upDownProfits.push("이런 기회를 더 살려 좋은 결과 내시면 좋겠습니다. 전략상 일부는 수익실현 하시기 바랍니다.");
+          // upDownProfits.push("해당 종목의 상태가 나쁘지 않습니다. 며칠 더 두고 보시고 관망하시기 바랍니다.");
+          
+          // let upDownLoss = [];
+          // upDownLoss.push("손실 중이시라면 매수의 타이밍이 좀 아쉽습니다. 황금추세선 하선의 기준으로 매수를 하셨으면 더 좋은 결과가 있었다고 판단합니다.");
+          // upDownLoss.push("현재 추세선 상선보다 아래에 위치한 주가의 흐름은 시장의 영향에 따른 변동성이 있어 보입니다. 추세선 하단선 지지선 기준으로 보유합니다.");
+          // upDownLoss.push("아직은 종목의 흐름을 판단하기가 여러모로 변수가 있습니다. 다만 하단기준선을 깨지 않는 관점에서는 보유하시길 권유합니다.");
+          // upDownLoss.push("현재 구간에서 지수의 변동성을 제외하더라도 종목의 흐름이 단기적인 변수를 가지는 구간입니다. 비중 추가 보다는 보유 전락을 가져가시길 권유합니다.");
+          // upDownLoss.push("수급의 확실한 기준을 파악하기 위해서는 좀 더 관망하시면서 보유전략이 바르다고 판단합니다.");
+          // upDownLoss.push("강한 파동을 기대하시기보다는 시간적인 투자가 필요합니다. 비중 유지하시면서 보유 전락으로 관망하시기 바랍니다.");
+          // upDownLoss.push("황금추세선 하단까지 전략적으로 끌고 가시는 편이 좋아 보입니다. 추세선 터치 시 다시 전략을 고민하셔야 할 거 같습니다.");
+          // upDownLoss.push("황금추세선 하단에 주가가 접근 시 현재 비중에 대한 부분을 고민할 필요가 있습니다. 우선 그 상황까지는 보유관점으로 판단합니다.");
+          // upDownLoss.push("황금추세선 상선과 하단선의 기준을 점검하시고 추가적인 대응 시 비중관리 하시면 좋겠습니다. 일단은 보유관점입니다.");
+          // upDownLoss.push("해당 종목이 진행에 있어 현재 구간에서 황금추세선 상단까지 주가가 상승하면 그 시점에는 비중을 줄이시고 조정 시 하단 기준선까지 보유전략입니다.");
+  
+          // let upUpProfits = [];
+          // upUpProfits.push("종목이 단기적인 탄력이 좋을 때는 일부 비중을 축소하시고 수익을 극대화하시기 바랍니다.");
+          // upUpProfits.push("황금추세선 상단을 돌파하는 구간입니다. 비중을 줄여 수익 내시고 나머지는 익절가 기준 잡고 보유하시길 권유합니다.");
+          // upUpProfits.push("수급의 흐름을 좀 더 관망하겠습니다. 수익 중이시면 일단 수익실현 하시고 추후 다시 보시는 게 좋다고 판단합니다.");
+          // upUpProfits.push("파동의 주기가 짧은 종목입니다. 수익 중이시면 수익 내시고 조정 시 다시 공략 하시는 게 좋아 보입니다.");
+          // upUpProfits.push("기본적인 차트의 상황은 좋습니다. 일부 비중 축소 후 수익을 가져가시길 권유합니다.");
+          // upUpProfits.push("팔아야 수익입니다. 수익 축하합니다.");
+          // upUpProfits.push("추가적인 상승이 나오지 않으면 매도기준을 상단선 기준으로 익절가 제시합니다.");
+          // upUpProfits.push("단기적인 상승세에 신뢰를 하시는 거 보다. 수익을 가져가시는 게 좋다고 판단합니다.");
+          // upUpProfits.push("추가적인 상승 시 황금추세 상단 선을 기준으로 익절 기준입니다. 좋은 결과 바랍니다.");
+          // upUpProfits.push("수익 중이더라도 추가적인 상승이 더 나 올지 궁금하기 마련입니다. 그렇다면 일단 비중을 줄이시고 관망하시기 바랍니다.");
+          
+          // let upUpLoss = [];
+          // upUpLoss.push("현재 손실 중입니다. 리스크관리 하셔야 합니다. 단기적인 파동이 변수입니다.");
+          // upUpLoss.push("따라가는 매매는 좋지 않습니다. 만일 급하게 매수하신 부분이라면 황금추세선 상단라인 기준으로 리스크관리 하시길 권유합니다.");
+          // upUpLoss.push("상선 기준선 매수 타이밍은 눌림목 매수가 이상적입니다. 현재 손실 중이시라면 황금추세선 상선 기준으로 이탈 시 리스크관리 하시기 바랍니다.");
+          // upUpLoss.push("추세선 상단의 기준선보다 높게 매수하신 경우 변동성이 커지는 구간이라 관리가 쉽지 않습니다. 우선 매수가 위로 자리 오면 비중을 축소하시고 리스크관리 하시기 바랍니다.");
+          // upUpLoss.push("최근 해당 종목의 흐름은 나쁘지 않으나 매수 타이밍이 아쉽습니다. 단기적인 관점이라면 매수가 위로 자리 주면 가능한 비중을 줄이시거나 리스크 관리에 신경 쓰시면 좋겠습니다.");
+          // upUpLoss.push("혹시 최근에 상승을 따라간 경우라면 오히려 파동의 변동성이 리스크로 작용할 경우가 많습니다. 황금추세선을 기준으로 대응하시면 좋겠습니다.");
+          // upUpLoss.push("혹시 조정이 나오더라도 손실이 크지 않은 상황이라면 황금추세선 상선 이탈 없을 시 타이밍을 보고 좀 더 보유하시는 관점 입니다.");
+          // upUpLoss.push("단기파동의 상승 파동을 기다리시는 구간이라면 황금추세선 상단선 이탈 없으면 보유하시고 매수가 위로 비중 축소 후 관망하는 관점으로 판단합니다.");
+          // upUpLoss.push("실질적인 파동의 끝자락은 파악하기가 쉽지 않으나 황금추세선의 상선을 기준으로 이탈 없으면 보유가 가능합니다. 수익 또는 익절 기준 잡고 좋은 결과 내시기 바랍니다.");
+          // upUpLoss.push("상선 추세선을 기준으로 눌림목 이후 파동이 나올 가능성은 기준선 이탈이 나오지 않은 경우입니다. 기준잡고 좀 더 보유하시는 관점입니다.");
+  
+          // let downUpProfits = [];
+          // downUpProfits.push("현재 수익 중입니다. 황금추세선 상단 선 기준으로 기준 잡으시고 보유전략 권유합니다.");
+          // downUpProfits.push("추가적인 수익이 좀 아쉬우나 다행히 현재 구간에서는 시간을 투자하신다면 좋은 결과가 기대됩니다. 기준선은 황금추세선 상단 선과 하단의 지지라인입니다.");
+          // downUpProfits.push("주가의 흐름이 탄탄하나 시장의 방향성에 대한 주가의 변동은 불가피합니다. 황금추세선 상단 선을 저항으로 수익 구간이며 하단의 지지선을 기준으로 리스크관리 하시기 바랍니다.");
+          // downUpProfits.push("단기적인 주가의 변동성에 대한 대응이 필요합니다. 비중은 그대로 보유관점이며 황금추세선 상단의 기준과 하단라인의 기준을 확인하시기 바랍니다.");
+          // downUpProfits.push("현재 구간에서 추가적인 주가의 추이를 좀 더 확인할 필요가 있습니다. 우선 보유관점으로 판단되며 황금추세선의 상단 선과 하단 선을 기준을 확인하시기 바랍니다.");
+          // downUpProfits.push("단기적으로 수익에 대한 부분은 비중을 줄일 필요가 있습니다. 해당 종목의 비중을 절반 정도만 보유하는 전략을 권유합니다. 기준가는 황금추세선 상단 선과 하단 선의 주가를 체크하시기 바랍니다.");
+          // downUpProfits.push("기준이 되는 황금추세선 상단과 하단 사이에 주가가 진행하는 구간입니다. 보유관점으로 판단하며 수익 구간과 리스크관리의 타이밍에 집중하시기 바랍니다.");
+          // downUpProfits.push("수익에 대한 부분은 일부 실현하시고 추가적인 조정 시 황금추세선 하단라인 기준으로 리스크관리 하시고 상단선 터치 시 나머지 비중도 수익실현 하시면 좋겠습니다.");
+          // downUpProfits.push("기본적인 매수 타이밍에 수익까지 나쁘지는 않습니다. 다만 황금추세선을 기준으로 매매 하셨다면 더 좋은 진행을 기대할 수 있다고 판단합니다. 황금추세선 상단 선과 하단 선을 기준으로 매매전략 세우시기 바랍니다.");
+          // downUpProfits.push("현재 주가의 진행에 기준가를 제시한다면 황금추세선의 상단 선은 수익 구간으로 보고 하단 선의 기준가는 리스크를 관리하시는 전략으로 보입니다.");
+  
+          // let downDownLoss = [];
+          // downDownLoss.push("추세가 단기적으로 힘이 없다고 판단되는 구간이라 리스크관리 하시기 바랍니다.");
+          // downDownLoss.push("추가하락에 대한 리스크관리가 필요합니다. 황금추세선 하단 선까지 반등이 없다면 비중축소를 권유합니다.");
+          // downDownLoss.push("손실의 영역이 더 커지기 전에 리스크관리가 필요한 시점입니다. 다만 반등 시 황금추세선 하단 선을 돌파하지 못하면 정리 관점으로 판단합니다.");
+          // downDownLoss.push("추세가 다시 반등을 시도하기까지는 크게 의미가 없는 구간으로 판단합니다. 비중을 점진적으로 축소하시는 방향을 권유합니다.");
+          // downDownLoss.push("황금추세선 하단 선을 회복하기 전까지는 진행상 비중을 더 늘리는 대응은 금물입니다. 반등이 나오지 않으면 리스크 관리를 하시는 전략으로 판단합니다.");
+          // downDownLoss.push("주가의 반등 없이 손실이 더 커지기 전에 비중을 줄이시거나 종목교체를 통해 추후를 도모하시는 편이 낫다고 판단이 됩니다.");
+          // downDownLoss.push("해당 종목의 진행에 추가적인 시장의 영향을 고려한다면 지금은 기간적인 안목을 더 멀리 두고 반등을 기다리시기 바랍니다. 황금추세선 하단 선을 기준으로 보유전략을 권유합니다.");
+          // downDownLoss.push("손실 중인 종목에 대한 무리한 방치는 오히려 독이 됩니다. 단기적인 관점에서는 황금추세선 하단라인까지 반등이 없다면 리스크관리 하시길 권유합니다.");
+          // downDownLoss.push("하락의 추세가 멈추고 지지선이 잡히면 황금추세선 하단 선까지 반등을 기다리시기 바랍니다. 전략적 비중축소를 권유합니다.");
+          // downDownLoss.push("단기적인 관점으로는 반등이 어려워 보입니다. 비중을 축소하고 종목교체를 통한 회복에 집중하시는 전략을 권유합니다.");
+        }
+        
+        return res.json({
+          "message" : {
+            "text" : "준비 중인 서비스입니다."
+          }
+        });
+      }
+      else if (getOutputText(data) == "조건다시요청")
+      {
+        return res.json({
+          "message" : {
+            "text" : "필요 조건을 모두 넣어서 요청해주세요.\n조건 : 종목명 매수가 비중\n예시) 삼성전자 250만원 10프로"
+          }
+        });
+      }
       // watson 대답이 매도의도 일 때 (의도 : 매도)
       else if (getOutputText(data) == "매도의도")
       {
@@ -804,7 +948,6 @@ let postMessage = (req, res) => {
 
           whatRobot(userKey).then(robot => {
             // 로봇에 따라 달라야 하기 때문에 whatRobot으로 robot정보 가져옴
-            console.log(kospi);
             kospiAnswer = briefingMarketConditions(robot, kospi);
             kosdaqAnswer = briefingMarketConditions(robot, kosdaq);
             largeAnswer = briefingMarketConditions(robot, large);
