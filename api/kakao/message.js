@@ -966,6 +966,8 @@ let postMessage = (req, res) => {
           let forHLine = parseInt(allCode['HLine'], 10);
           let forLLine = parseInt(allCode['LLine'], 10);
           let forPrice = parseInt(allCode['현재가'], 10);
+          let golden = "";
+          let imgUrl = "";
 
           selectDay(code, "고가").then(high => {
             if (buyPrice > parseInt(high['고가']))
@@ -997,10 +999,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "up_profits_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "up_profits_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1008,10 +1012,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "up_loss_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "up_loss_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else
@@ -1027,10 +1033,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "middle_profits_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "middle_profits_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1038,10 +1046,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "middle_loss_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "middle_loss_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else
@@ -1057,10 +1067,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "down_profits_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "down_profits_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1068,10 +1080,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "down_loss_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "down_loss_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else
@@ -1079,16 +1093,34 @@ let postMessage = (req, res) => {
                       column = "no_change";
                     }
                   }
+                  golden = "황금추세선 상단주가 : " + forHLine + "원\n황금추세선 하단주가 : " + forLLine + "원";
 
                   selectGarOrApar("gar", column).then(answer => {
                     let answerObj = JSON.parse(answer[column]);
                     let random = Math.floor((Math.random() * Object.keys(answerObj).length) + 1);
                     let randomStr = random.toString();
-                    console.log(answerObj[randomStr]);
                     
-                    return res.json({
-                      "message" : {
-                        "text" : answerObj[randomStr]
+                    whatRobot(userKey).then(robot => {
+                      if (robot == "000")
+                      {
+                        return res.json({
+                          "message" : {
+                            "text" : answerObj[randomStr],
+                          }
+                        });
+                      }
+                      else if (robot == "100")
+                      {
+                        return res.json({
+                          "message" : {
+                            "text" : answerObj[randomStr] + "\n\n" + golden,
+                            "photo": {
+                              "url": imgUrl,
+                              "width": 88,
+                              "height": 44
+                            }
+                          }
+                        });
                       }
                     });
                   });
@@ -1112,6 +1144,8 @@ let postMessage = (req, res) => {
           let forHLine = parseInt(allCode['HLine'], 10);
           let forLLine = parseInt(allCode['LLine'], 10);
           let forPrice = parseInt(allCode['현재가'], 10);
+          let golden = "";
+          let imgUrl = "";
 
           selectDay(code, "고가").then(high => {
             if (buyPrice > parseInt(high['고가']))
@@ -1143,10 +1177,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "up_profits_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "up_profits_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1154,10 +1190,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "up_loss_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "up_loss_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else
@@ -1173,10 +1211,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "middle_profits_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "middle_profits_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1188,6 +1228,7 @@ let postMessage = (req, res) => {
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "middle_loss_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else
@@ -1203,10 +1244,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "down_profits_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "down_profits_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1214,10 +1257,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "down_loss_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "down_loss_fivedown";
+                        imgUrl = "http://61.72.187.6/images/Retention";
                       }
                     }
                     else
@@ -1225,16 +1270,34 @@ let postMessage = (req, res) => {
                       column = "no_change";
                     }
                   }
+                  golden = "황금추세선 상단주가 : " + forHLine + "원\n황금추세선 하단주가 : " + forLLine + "원";
 
                   selectGarOrApar("apar", column).then(answer => {
                     let answerObj = JSON.parse(answer[column]);
                     let random = Math.floor((Math.random() * Object.keys(answerObj).length) + 1);
                     let randomStr = random.toString();
-                    console.log(answerObj[randomStr]);
-                    
-                    return res.json({
-                      "message" : {
-                        "text" : answerObj[randomStr]
+
+                    whatRobot(userKey).then(robot => {
+                      if (robot == "000")
+                      {
+                        return res.json({
+                          "message" : {
+                            "text" : answerObj[randomStr],
+                          }
+                        });
+                      }
+                      else if (robot == "100")
+                      {
+                        return res.json({
+                          "message" : {
+                            "text" : answerObj[randomStr] + "\n\n" + golden,
+                            "photo": {
+                              "url": imgUrl,
+                              "width": 88,
+                              "height": 44
+                            }
+                          }
+                        });
                       }
                     });
                   });
