@@ -6,6 +6,7 @@ let getKeyboard = (req, res) => {
   return res.json({
     "type" : "buttons",
     "buttons" : [
+      "시작하기",
       "사용법",
       "유료 인공지능 서비스 받기",
       "무료 인공지능 서비스 받기",

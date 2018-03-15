@@ -387,11 +387,21 @@ let postMessage = (req, res) => {
       "keyboard": {
         "type": "buttons",
         "buttons": [
+          "시작하기",
           "사용법",
           "유료 인공지능 서비스 받기",
           "무료 인공지능 서비스 받기",
           "기존 VIP 인증하기"
         ]
+      }
+    };
+    sendKakaoText(massage);
+  }
+  else if (content.text == "시작하기")
+  {
+    let massage = {
+      "message": {
+        "text": "지금부터 인공지능/인간 전문가의 서비스를 시작합니다. 사용중 사용법이 궁금하시면 [사용법] 이라고 입력해주세요."
       }
     };
     sendKakaoText(massage);
@@ -999,12 +1009,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "up_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "up_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1012,12 +1022,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "up_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "up_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else
@@ -1033,12 +1043,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "middle_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "middle_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1046,12 +1056,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "middle_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "middle_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else
@@ -1067,12 +1077,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "down_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "down_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1080,12 +1090,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "down_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "down_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else
@@ -1105,7 +1115,7 @@ let postMessage = (req, res) => {
                       {
                         return res.json({
                           "message" : {
-                            "text" : answerObj[randomStr],
+                            "text" : "부미 :\n" + answerObj[randomStr],
                           }
                         });
                       }
@@ -1113,7 +1123,7 @@ let postMessage = (req, res) => {
                       {
                         return res.json({
                           "message" : {
-                            "text" : answerObj[randomStr] + "\n\n" + golden,
+                            "text" : "R-e :\n" + answerObj[randomStr] + "\n\n" + golden,
                             "photo": {
                               "url": imgUrl,
                               "width": 88,
@@ -1177,12 +1187,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "up_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "up_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1190,12 +1200,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "up_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "up_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else
@@ -1211,12 +1221,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "middle_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "middle_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1224,11 +1234,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "middle_loss_fiveup";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "middle_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else
@@ -1244,12 +1255,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "down_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "down_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1257,12 +1268,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "down_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout";
+                        imgUrl = "http://61.72.187.6/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "down_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention";
+                        imgUrl = "http://61.72.187.6/images/Retention1";
                       }
                     }
                     else
@@ -1282,7 +1293,7 @@ let postMessage = (req, res) => {
                       {
                         return res.json({
                           "message" : {
-                            "text" : answerObj[randomStr],
+                            "text" : "부미 :\n" + answerObj[randomStr],
                           }
                         });
                       }
@@ -1290,7 +1301,7 @@ let postMessage = (req, res) => {
                       {
                         return res.json({
                           "message" : {
-                            "text" : answerObj[randomStr] + "\n\n" + golden,
+                            "text" : "R-e :\n" + answerObj[randomStr] + "\n\n" + golden,
                             "photo": {
                               "url": imgUrl,
                               "width": 88,
