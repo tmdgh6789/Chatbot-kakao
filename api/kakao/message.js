@@ -381,7 +381,7 @@ let postMessage = (req, res) => {
         "text": "유료가입으로 '지금 이 방에서' 자신이 선택한 인공지능/인간 전문가의 서비스를 받아볼 수 있습니다",
         "message_button": {
           "label": "가입하러 가기",
-          "url": "http://61.72.187.6/kakao/index?UserKey=" + userKey
+          "url": "http://13.125.147.26/kakao/index?UserKey=" + userKey
         }
       },
       "keyboard": {
@@ -513,7 +513,7 @@ let postMessage = (req, res) => {
         "text": "유료가입으로 '지금 이 방에서' 자신이 선택한 인공지능/인간 전문가의 서비스를 받아볼 수 있습니다",
         "message_button": {
           "label": "가입하러 가기",
-          "url": "http://61.72.187.6/kakao/index?UserKey=" + userKey
+          "url": "http://13.125.147.26/kakao/index?UserKey=" + userKey
         }
       },
       "keyboard": {
@@ -565,7 +565,7 @@ let postMessage = (req, res) => {
           "text": "기존 VIP 회원분들은 인증을 통해 유료 인공지능 서비스를 받으실 수 있습니다.",
           "message_button": {
             "label": "인증하러 가기",
-            "url": "http://61.72.187.6/kakao/login.php?UserKey=" + userKey
+            "url": "http://13.125.147.26/kakao/login.php?UserKey=" + userKey
           }
         },
         "keyboard": {
@@ -1009,12 +1009,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "up_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "up_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1022,12 +1022,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "up_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "up_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else
@@ -1043,12 +1043,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "middle_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "middle_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1056,12 +1056,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "middle_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "middle_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else
@@ -1077,12 +1077,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "down_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "down_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1090,12 +1090,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "down_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "down_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else
@@ -1187,12 +1187,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "up_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "up_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1200,12 +1200,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "up_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "up_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else
@@ -1221,12 +1221,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "middle_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "middle_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1234,12 +1234,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "middle_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "middle_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else
@@ -1255,12 +1255,12 @@ let postMessage = (req, res) => {
                       if ((forPrice - buyPrice) >= fivePercent)
                       {
                         column = "down_profits_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((forPrice - buyPrice) < fivePercent)
                       {
                         column = "down_profits_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else if (forPrice < buyPrice)
@@ -1268,12 +1268,12 @@ let postMessage = (req, res) => {
                       if ((buyPrice - forPrice) >= fivePercent)
                       {
                         column = "down_loss_fiveup";
-                        imgUrl = "http://61.72.187.6/images/Sellout1";
+                        imgUrl = "http://13.125.147.26/images/Sellout1";
                       }
                       else if ((buyPrice - forPrice) < fivePercent)
                       {
                         column = "down_loss_fivedown";
-                        imgUrl = "http://61.72.187.6/images/Retention1";
+                        imgUrl = "http://13.125.147.26/images/Retention1";
                       }
                     }
                     else
